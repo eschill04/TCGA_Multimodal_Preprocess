@@ -1,23 +1,22 @@
 import os
-import slideio #MUST INSTALL FIRST
+import slideio 
 import pandas as pd
 import numpy as np
 import matplotlib.image as mpimg
 from PIL import Image
 
-# get list of ids
-id_df = pd.read_csv("../../../eschill4_multimodal_data/id_ttv_split_shuffled.csv")
+
+ID_PATH = "../../../eschill4_multimodal_data/id_ttv_split_shuffled.csv"
+ORGANIZED_BY_CASE_PATH = "/users/eschill4/data/TCGA_Data/project_LUAD/data_by_cases/"
+SAVE_PATH = "../../../eschill4_multimodal_data/image_experimental/"
+
+id_df = pd.read_csv(ID_PATH)
 ids = id_df["id"].tolist()
 categories = id_df["cat"].tolist()
 
-ORGANIZED_BY_CASE_PATH = "/users/eschill4/data/TCGA_Data/project_LUAD/data_by_cases/"
-save_path = "../../../eschill4_multimodal_data/image_experimental/"
-# Can change the save path to something compatible with your set-up
-# Wherever you make new directory, make sure to have image_train, image_test, and image_val folders
-# inside!!!
- 
-
-#-- goes through list of case_ids
+'''
+Given a Case ID, return the path to the correct (DX) .svs image for that Case ID. 
+'''
 def get_FFPE_images(case):
     img_files = os.listdir(os.path.join(ORGANIZED_BY_CASE_PATH, case, "images"))
     for f in img_files:
@@ -26,7 +25,9 @@ def get_FFPE_images(case):
     print("No DX found for case",case)
     return None
 
-
+'''
+Populate a dictionary of Case ID's and their image paths.
+'''
 valid_case_paths = {}
 j = 0
 for case in ids:
@@ -36,11 +37,11 @@ for case in ids:
         j+=1
 print(f"{j} cases out of {len(ids)} have valid images")
 
+'''
+Populate a list of image dimensions to calculate the median aspect ratio.
+'''
 orig_dims = []
-
 for (case, img_path) in valid_case_paths.items():
-
-    #-- indexes into images folder for that case
     
     slide = slideio.open_slide(img_path,'SVS')
     scene = slide.get_scene(0)
@@ -53,9 +54,15 @@ aspect_ratio = [x/y for x, y in orig_dims]
 med_aspect_ratio = round(np.median(aspect_ratio), 4)
 print(f"Median aspect ratio: {med_aspect_ratio}")
 
+
+'''
+Transpose all vertical images to avoid excessive distortion.
+Resize all images to new dimensions based on median aspect ratio.
+Finally, save image as .jpg in either image_train, image_test, or image_val folder.
+'''
 h = 300
 w = round(med_aspect_ratio * h)
-print(f"Width: {w}, Height: {h}")
+print(f"New Width: {w}, New Height: {h}")
 
 for (case, img_path) in valid_case_paths.items():
 
@@ -64,43 +71,22 @@ for (case, img_path) in valid_case_paths.items():
     image = scene.read_block(size=(0,h))
     orig_width = image.shape[1]
     
-    '''
-    Old padding script here:
-    final_img = np.empty([h, w, 3])
-    
-    if height > h:
-        middle = height//2
-        diff = h//2 + 1
-        final_img = image[middle-diff:middle+diff,:,:]
-        
-    if height < h:
-        edge = (h - height)//2
-        final_img = np.pad(image, ((edge + 1, edge + 1), (0, 0), (0, 0)), constant_values=(255,))
-
-    final_img = (final_img[:h,:,:]).clip(0, 255)
-    '''
-        
-    
-    print("orig dims:", image.shape)
     new_image = Image.fromarray(image)
     if(h > orig_width):
         new_image = new_image.transpose(Image.ROTATE_90)
         
     resized_image = new_image.resize((w, h))
-    print("final dims:", resized_image.size)
-    
-    #-- saves the nparray to a jpeg file based on category
-    
+        
     print(case, "successful")
     
     cat = categories[ids.index(case)]
     
     if cat == 0:
-        resized_image.save(save_path + "image_train/" + case + '.jpg')
+        resized_image.save(SAVE_PATH + "image_train/" + case + '.jpg')
     elif cat == 1:
-        resized_image.save(save_path + "image_test/" + case + '.jpg')
+        resized_image.save(SAVE_PATH + "image_test/" + case + '.jpg')
     else:
-        resized_image.save(save_path + "image_val/" + case + '.jpg')
+        resized_image.save(SAVE_PATH + "image_val/" + case + '.jpg')
 
 
 

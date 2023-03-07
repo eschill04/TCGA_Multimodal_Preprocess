@@ -5,26 +5,28 @@ import matplotlib.image as mpimg
 import numpy as np
 
 
-data_path = "../../../eschill4_multimodal_data/shuffled_data/" # Will need to change path
-new_path = "../../../eschill4_multimodal_data/tensor_data/" # Will need to change path
-id_order = pd.read_csv("../../../eschill4_multimodal_data/id_ttv_split_shuffled.csv") # Will need to change path
+DATA_PATH = "../../../eschill4_multimodal_data/shuffled_data/" 
+SAVE_PATH = "../../../eschill4_multimodal_data/tensor_data/" 
+ID_PATH = "../../../eschill4_multimodal_data/id_ttv_split_shuffled.csv"
+id_order = pd.read_csv(ID_PATH) 
 
-modalities_to_convert = ["cnv", "epigenomic", "transcriptomic", "clinical"] # no need to write images!!
+modalities_to_convert = ["cnv", "epigenomic", "transcriptomic", "clinical"] 
 sets = ["train", "test", "val"]
 
-# DEFINE CLASSES FOR DATASETS
-
+'''
+Custom Dataset used for all non-image modalities.
+'''
 class CSVDataset(Dataset):
 
     def __init__(self, m, s):
 
         # solutions
-        self.sols = pd.read_csv(data_path +  "clinical_" + s + ".csv")["vital_status_Dead"].tolist()
+        self.sols = pd.read_csv(DATA_PATH +  "clinical_" + s + ".csv")["vital_status_Dead"].tolist()
         
         #data
-        self.data = pd.read_csv(data_path + m + "_" + s + ".csv")
+        self.data = pd.read_csv(DATA_PATH + m + "_" + s + ".csv")
         
-        # drop solutions and case ids off data
+        # drop solutions and case ids
         case = "case_id"
         if(m == "clinical"):
             self.data = self.data.drop(columns=["vital_status_Dead"])
@@ -39,12 +41,16 @@ class CSVDataset(Dataset):
             idx = idx.tolist()
         return [self.data.iloc[idx].values, self.sols[idx]]
         
+
+'''
+Custom Dataset used for image modalities.
+'''
 class IMGDataset(Dataset):
 
     def __init__(self, arr, s):
 
         # solutions
-        self.sols = pd.read_csv(data_path +  "clinical_" + s + ".csv")["vital_status_Dead"].tolist()
+        self.sols = pd.read_csv(DATA_PATH +  "clinical_" + s + ".csv")["vital_status_Dead"].tolist()
         
         #data
         self.data = arr
@@ -57,41 +63,42 @@ class IMGDataset(Dataset):
         return [self.data[idx], self.sols[idx]]
 
         
-# -------- MAKE ALL NON IMAGE DATASETS ------------------
 
+'''
+Code to create and save non-image modalities
+'''
 
 for m in modalities_to_convert:
     for s in sets:
         dataset = CSVDataset(m, s)
         print(dataset)
-        torch.save(dataset, new_path + m + "_" + s + "_inputs.pt")
+        torch.save(dataset, SAVE_PATH + m + "_" + s + "_inputs.pt")
 
-        
+'''
+Code to create and save image modality
+'''
+
 ids = id_order["id"].tolist()
 cat = id_order["cat"].tolist()
-
-
-# -------- MAKE IMAGE DATASETS ---------------------------
 
 lens = [360, 71, 71]
 
 for s in range(0, 3):
     img_array = np.empty([lens[s], 650, 500, 3])
-    # make ordered nparrays
     idx = 0
     for i in range(0, len(ids)):
         case_id = ids[i]
         case_cat = cat[i]
         if case_cat == s:
             try: 
-                image = mpimg.imread(data_path + "image_" + sets[s] + "/" + case_id + ".jpeg")
+                image = mpimg.imread(DATA_PATH + "image_" + sets[s] + "/" + case_id + ".jpeg")
                 img_array[idx] = image
             except:
                 print(case_id, "not here")
             idx = idx + 1
     print(img_array.shape)
     dataset1 = IMGDataset(img_array, sets[s])
-    torch.save(dataset1, new_path + "image_"+ sets[s] + "_inputs.pt")
+    torch.save(dataset1, SAVE_PATH + "image_"+ sets[s] + "_inputs.pt")
         
     
         

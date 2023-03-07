@@ -3,13 +3,18 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_selection import SelectFromModel
 
 modalities = ["cnv", "transcriptomic", "epigenomic"]
-access_path = "/gpfs/data/rsingh47/eschill4_multimodal_data/shuffled_data/nonreduced/"
-save_path = "/gpfs/data/rsingh47/eschill4_multimodal_data/shuffled_data/"
+DATA_PATH = "/gpfs/data/rsingh47/eschill4_multimodal_data/shuffled_data/"
+SAVE_PATH = "/gpfs/data/rsingh47/eschill4_multimodal_data/shuffled_data/"
 
+'''
+Peform feature selection using a Random Forest Classifier on selected datasets.
+Create new DataFrames and include only selected features (columns); save to 
+SAVE_PATH. 
+'''
 for modality in modalities:
-    train = pd.read_csv(access_path + modality + "_train.csv")
-    test = pd.read_csv(access_path + modality + "_test.csv")
-    val = pd.read_csv(access_path + modality + "_val.csv")
+    train = pd.read_csv(DATA_PATH + modality + "_train.csv")
+    test = pd.read_csv(DATA_PATH + modality + "_test.csv")
+    val = pd.read_csv(DATA_PATH + modality + "_val.csv")
     
     case = "case_id"
         
@@ -34,6 +39,6 @@ for modality in modalities:
     print(len(new_test.columns))   
     print(len(new_val.columns))   
     
-    new_train.to_csv(save_path + modality + "_train.csv", index=False)
-    new_test.to_csv(save_path + modality + "_test.csv", index=False)
-    new_val.to_csv(save_path + modality + "_val.csv", index=False)
+    new_train.to_csv(SAVE_PATH + modality + "_train.csv", index=False)
+    new_test.to_csv(SAVE_PATH + modality + "_test.csv", index=False)
+    new_val.to_csv(SAVE_PATH + modality + "_val.csv", index=False)

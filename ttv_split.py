@@ -1,15 +1,22 @@
-import random
 import pandas as pd
  
-save_path = "/gpfs/data/rsingh47/eschill4_multimodal_data/shuffled_data/"
-id_path = "/gpfs/data/rsingh47/eschill4_multimodal_data/id_ttv_split_shuffled.csv"
-# read in ids and data
-id_df = pd.read_csv(id_path)
+DATA_PATH = "/gpfs/data/rsingh47/TCGA_Data/project_LUAD/data_processed/"
+SAVE_PATH = "/gpfs/data/rsingh47/eschill4_multimodal_data/shuffled_data/"
+ID_PATH = "/gpfs/data/rsingh47/eschill4_multimodal_data/id_ttv_split_shuffled.csv"
+
+
+id_df = pd.read_csv(ID_PATH)
 ids = id_df["id"].tolist()
 categories = id_df["cat"].tolist()
 modalities = ["transcriptomic", "cnv", "epigenomic", "clinical"]
+
+'''
+Loop through modalities and read in data and create new DataFrames for train, test, and validate.
+Using id_df (a mapping of Case IDs to train, test, and validate), sort columns between
+the three groups and save the new csv's to SAVE_PATH.
+'''
 for modality in modalities:
-    data = pd.read_csv("/gpfs/data/rsingh47/TCGA_Data/project_LUAD/data_processed/PRCSD_"+modality+"_data.csv")
+    data = pd.read_csv(DATA_PATH + "PRCSD_" + modality + "_data.csv")
     
     # create new DataFrames for ttv sets
     train = pd.DataFrame(columns = list(data.columns.values))
@@ -34,8 +41,8 @@ for modality in modalities:
             val = val.append(newrow, ignore_index=True)
             
     # Save new dataframes as csvs
-    train.to_csv(save_path + modality+"_train.csv", index=False)
-    test.to_csv(save_path + modality+"_test.csv", index=False)
-    val.to_csv(save_path + modality+"_val.csv", index=False)
+    train.to_csv(SAVE_PATH + modality+"_train.csv", index=False)
+    test.to_csv(SAVE_PATH + modality+"_test.csv", index=False)
+    val.to_csv(SAVE_PATH + modality+"_val.csv", index=False)
 
 
