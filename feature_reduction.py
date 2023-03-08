@@ -3,8 +3,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_selection import SelectFromModel
 
 modalities = ["cnv", "transcriptomic", "epigenomic"]
-DATA_PATH = "/gpfs/data/rsingh47/eschill4_multimodal_data/shuffled_data/"
-SAVE_PATH = "/gpfs/data/rsingh47/eschill4_multimodal_data/shuffled_data/"
+DATA_PATH = "PATH_TO_UNREDUCED_DATA"
+SAVE_PATH = "PATH_TO_SAVE_DATA"
 
 '''
 Peform feature selection using a Random Forest Classifier on selected datasets.
