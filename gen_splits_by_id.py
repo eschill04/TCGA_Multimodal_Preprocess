@@ -5,6 +5,7 @@ import os
 # read DataFrame
 DATA_PATH = "PATH_TO_DATA"
 ORGANIZED_BY_CASE_PATH = "PATH_TO_DATA_BY_CASES"
+ID_PATH = "PATH_TO_SAVE_ID_SPLIT"
 
 '''
 Get ids for non-image csv files
@@ -114,4 +115,4 @@ id_df = pd.DataFrame(final_dict)
 Shuffle the final dataframe and save to csv
 '''
 id_df = id_df.sample(frac = 1)
-id_df.to_csv("id_ttv_split.csv", index = False)
+id_df.to_csv(ID_PATH + "id_ttv_split.csv", index = False)
