@@ -1,8 +1,8 @@
 import pandas as pd
  
-DATA_PATH = "/gpfs/data/rsingh47/TCGA_Data/project_LUAD/data_processed/"
-SAVE_PATH = "/gpfs/data/rsingh47/eschill4_multimodal_data/shuffled_data/"
-ID_PATH = "/gpfs/data/rsingh47/eschill4_multimodal_data/id_ttv_split_shuffled.csv"
+DATA_PATH = "PATH_TO_DATA"
+SAVE_PATH = "PATH_TO_SAVE_DATA"
+ID_PATH = "PATH_TO_ID_SPLIT"
 
 
 id_df = pd.read_csv(ID_PATH)
