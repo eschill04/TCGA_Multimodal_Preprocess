@@ -6,9 +6,9 @@ import matplotlib.image as mpimg
 from PIL import Image
 
 
-ID_PATH = "../../../eschill4_multimodal_data/id_ttv_split_shuffled.csv"
-ORGANIZED_BY_CASE_PATH = "/users/eschill4/data/TCGA_Data/project_LUAD/data_by_cases/"
-SAVE_PATH = "../../../eschill4_multimodal_data/image_experimental/"
+ID_PATH = "PATH_TO_ID_SPLIT"
+ORGANIZED_BY_CASE_PATH = "PATH_TO_DATA_BY_CASES"
+SAVE_PATH = "PATH_TO_SAVE_IMAGES" # !! MUST HAVE SUBDIRECTORIES CALLED image_train, image_test, AND image_val
 
 id_df = pd.read_csv(ID_PATH)
 ids = id_df["id"].tolist()
