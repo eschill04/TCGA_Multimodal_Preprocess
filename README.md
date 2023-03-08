@@ -1,5 +1,5 @@
 # Preprocessing for TCGA Datasets (End Stage)
-## Pipeline to permanently assign Case IDs to training, testing, and validation categories, then move the raw data from .svs and .csv file format to preprocessed tensors split via the pre-assigned IDs. 
+Pipeline to permanently assign Case IDs to training, testing, and validation categories, then move the raw data from .svs and .csv file format to preprocessed tensors split via the pre-assigned IDs. 
 
 ### 1. Assign Case IDs to train, test, and validate
 
