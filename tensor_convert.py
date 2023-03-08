@@ -5,9 +5,9 @@ import matplotlib.image as mpimg
 import numpy as np
 
 
-DATA_PATH = "../../../eschill4_multimodal_data/shuffled_data/" 
-SAVE_PATH = "../../../eschill4_multimodal_data/tensor_data/" 
-ID_PATH = "../../../eschill4_multimodal_data/id_ttv_split_shuffled.csv"
+DATA_PATH = "PATH_TO_DATA" 
+SAVE_PATH = "PATH_TO_SAVE_TENSOR_DATA" 
+ID_PATH = "PATH_TO_ID_SPLITS"
 id_order = pd.read_csv(ID_PATH) 
 
 modalities_to_convert = ["cnv", "epigenomic", "transcriptomic", "clinical"] 
