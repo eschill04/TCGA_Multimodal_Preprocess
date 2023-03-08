@@ -22,7 +22,6 @@ def get_FFPE_images(case):
     for f in img_files:
         if (f.split('.')[0][-3:-1] == 'DX'):
             return os.path.join(ORGANIZED_BY_CASE_PATH, case, 'images', f)
-    print("No DX found for case",case)
     return None
 
 '''
