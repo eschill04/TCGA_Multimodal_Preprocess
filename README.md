@@ -3,7 +3,7 @@ Pipeline to permanently assign Case IDs to training, testing, and validation cat
 
 ### 1. Preprocess the non-image modalities
 
-Run create_<modality>_dataset.ipynb for all four of the non-image modalities. This will organize the data in .csv form and perform some preliminary data cleaning such as dropping columns with NaN values and selecting highly variable features.
+Run `create_<modality>_dataset.ipynb` for all four of the non-image modalities. This will organize the data in .csv form and perform some preliminary data cleaning such as dropping columns with NaN values and selecting highly variable features.
 
 ### 2. Assign Case IDs to train, test, and validate
 
