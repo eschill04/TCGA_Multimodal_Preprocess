@@ -1,9 +1,9 @@
-# Preprocessing for TCGA Datasets (End Stage)
-Pipeline to permanently assign Case IDs to training, testing, and validation categories, then move the raw data from `.svs` and `.csv` file format to preprocessed tensors split via the pre-assigned IDs. 
+# Preprocessing for TCGA Datasets (from data_by_cases)
+Pipeline to permanently assign Case IDs to training, testing, and validation categories, then move the raw data from a by-case format to preprocessed tensors split via the pre-assigned IDs. 
 
 ### 1. Preprocess the non-image modalities
 
-Run `create_<modality>_dataset.ipynb` for all four of the non-image modalities. This will organize the data in .csv form and perform some preliminary data cleaning such as dropping columns with NaN values and selecting highly variable features.
+Run `create_<modality>_dataset.ipynb` for all four of the non-image modalities. This will organize the data in `.csv` form and perform some preliminary data cleaning such as dropping columns with NaN values and selecting highly variable features.
 
 ### 2. Assign Case IDs to train, test, and validate
 
